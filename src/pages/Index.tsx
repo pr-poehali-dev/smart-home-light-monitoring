@@ -67,6 +67,8 @@ const Index = () => {
     { id: '3', type: 'error', message: 'Потеря связи с торшером в гостиной', time: '3 часа назад' },
   ]);
 
+  const [showNotifications, setShowNotifications] = useState(false);
+
   const toggleLight = (id: string) => {
     setLights(lights.map(light => 
       light.id === id ? { ...light, isOn: !light.isOn } : light
@@ -105,12 +107,69 @@ const Index = () => {
               </h1>
               <p className="text-muted-foreground text-sm mt-1">Система освещения</p>
             </div>
-            <Button variant="ghost" size="icon" className="relative">
-              <Icon name="Bell" size={24} />
-              {notifications.filter(n => n.type === 'error' || n.type === 'warning').length > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full animate-pulse-glow" />
+            <div className="relative">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="relative"
+                onClick={() => setShowNotifications(!showNotifications)}
+              >
+                <Icon name="Bell" size={24} />
+                {notifications.filter(n => n.type === 'error' || n.type === 'warning').length > 0 && (
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-destructive rounded-full animate-pulse-glow" />
+                )}
+              </Button>
+              
+              {showNotifications && (
+                <Card className="absolute right-0 top-12 w-80 glassmorphism border-0 p-4 z-50 animate-fade-in">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold">Уведомления</h3>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => setShowNotifications(false)}
+                    >
+                      <Icon name="X" size={16} />
+                    </Button>
+                  </div>
+                  <div className="space-y-3">
+                    {notifications.map((notification) => (
+                      <div 
+                        key={notification.id} 
+                        className="p-3 rounded-lg bg-muted/50 space-y-1 hover:bg-muted transition-colors"
+                      >
+                        <div className="flex items-start gap-2">
+                          <div className={`p-1 rounded-full ${
+                            notification.type === 'error' ? 'bg-destructive/20' : 
+                            notification.type === 'warning' ? 'bg-yellow-500/20' : 
+                            'bg-blue-500/20'
+                          }`}>
+                            <Icon 
+                              name={
+                                notification.type === 'error' ? 'AlertCircle' : 
+                                notification.type === 'warning' ? 'AlertTriangle' : 
+                                'Info'
+                              } 
+                              size={16}
+                              className={`${
+                                notification.type === 'error' ? 'text-destructive' : 
+                                notification.type === 'warning' ? 'text-yellow-500' : 
+                                'text-blue-500'
+                              }`}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm">{notification.message}</p>
+                            <p className="text-xs text-muted-foreground mt-1">{notification.time}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
               )}
-            </Button>
+            </div>
           </div>
 
           <Card className="glassmorphism p-4 border-0">
@@ -153,14 +212,21 @@ const Index = () => {
                 {lights.map((light) => (
                   <Card 
                     key={light.id} 
-                    className={`glassmorphism p-4 border-0 transition-all duration-300 hover:scale-[1.02] ${
+                    className={`glassmorphism p-4 border-0 transition-all duration-500 hover:scale-[1.02] relative overflow-hidden ${
                       light.isOn ? 'neon-glow' : ''
                     }`}
                   >
-                    <div className="flex items-start justify-between mb-3">
+                    {light.isOn && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-pink-500/10 to-transparent animate-pulse-glow pointer-events-none" />
+                    )}
+                    <div className="flex items-start justify-between mb-3 relative z-10">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${light.isOn ? 'gradient-purple-pink' : 'bg-muted'}`}>
-                          <Icon name="Lightbulb" size={20} />
+                        <div className={`p-2 rounded-lg transition-all duration-300 ${
+                          light.isOn 
+                            ? 'gradient-purple-pink shadow-[0_0_15px_rgba(168,85,247,0.4)]' 
+                            : 'bg-muted'
+                        }`}>
+                          <Icon name="Lightbulb" size={20} className={light.isOn ? 'animate-pulse' : ''} />
                         </div>
                         <div>
                           <h3 className="font-semibold">{light.name}</h3>
@@ -212,14 +278,21 @@ const Index = () => {
               {filteredLights.map((light) => (
                 <Card 
                   key={light.id} 
-                  className={`glassmorphism p-4 border-0 transition-all duration-300 ${
+                  className={`glassmorphism p-4 border-0 transition-all duration-500 relative overflow-hidden ${
                     light.isOn ? 'neon-glow' : ''
                   }`}
                 >
-                  <div className="flex items-center justify-between">
+                  {light.isOn && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 via-pink-500/20 to-orange-500/20 animate-pulse-glow" />
+                  )}
+                  <div className="flex items-center justify-between relative z-10">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${light.isOn ? 'gradient-blue-orange' : 'bg-muted'}`}>
-                        <Icon name="Lightbulb" size={20} />
+                      <div className={`p-2 rounded-lg transition-all duration-300 ${
+                        light.isOn 
+                          ? 'gradient-blue-orange shadow-[0_0_20px_rgba(139,92,246,0.5)]' 
+                          : 'bg-muted'
+                      }`}>
+                        <Icon name="Lightbulb" size={20} className={light.isOn ? 'animate-pulse' : ''} />
                       </div>
                       <div>
                         <h3 className="font-semibold">{light.name}</h3>
