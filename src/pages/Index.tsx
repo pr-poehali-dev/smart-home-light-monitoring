@@ -37,6 +37,15 @@ interface Notification {
   time: string;
 }
 
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  type: string;
+  image: string;
+}
+
 const Index = () => {
   const [lights, setLights] = useState<Light[]>([
     { id: '1', name: 'Люстра', room: 'Гостиная', isOn: true, brightness: 80 },
@@ -67,7 +76,16 @@ const Index = () => {
     { id: '3', type: 'error', message: 'Потеря связи с торшером в гостиной', time: '3 часа назад' },
   ]);
 
-  const [showNotifications, setShowNotifications] = useState(false);
+  const products: Product[] = [
+    { id: '1', name: 'Умная лампочка E27', price: 1290, description: 'RGB, 9W, Wi-Fi', type: 'Лампа', image: '💡' },
+    { id: '2', name: 'LED лента 5м', price: 2490, description: 'RGB, пульт ДУ', type: 'Лента', image: '🌈' },
+    { id: '3', name: 'Умный выключатель', price: 1890, description: 'Сенсорный, 2 клавиши', type: 'Выключатель', image: '🎛️' },
+    { id: '4', name: 'Настольная лампа', price: 3490, description: 'RGB, таймер сна', type: 'Лампа', image: '🪔' },
+    { id: '5', name: 'Потолочный светильник', price: 4990, description: 'Умное управление, 24W', type: 'Светильник', image: '💫' },
+    { id: '6', name: 'Диммер Wi-Fi', price: 1590, description: 'Регулировка яркости', type: 'Аксессуар', image: '⚡' },
+  ];
+
+
 
   const toggleLight = (id: string) => {
     setLights(lights.map(light => 
@@ -187,9 +205,12 @@ const Index = () => {
         </header>
 
         <Tabs defaultValue="home" className="animate-scale-in">
-          <TabsList className="grid w-full grid-cols-5 bg-muted/50">
+          <TabsList className="grid w-full grid-cols-6 bg-muted/50">
             <TabsTrigger value="home" className="data-[state=active]:gradient-purple-pink">
               <Icon name="Home" size={20} />
+            </TabsTrigger>
+            <TabsTrigger value="map" className="data-[state=active]:gradient-purple-pink">
+              <Icon name="Map" size={20} />
             </TabsTrigger>
             <TabsTrigger value="rooms" className="data-[state=active]:gradient-purple-pink">
               <Icon name="Lightbulb" size={20} />
@@ -197,8 +218,8 @@ const Index = () => {
             <TabsTrigger value="scenarios" className="data-[state=active]:gradient-purple-pink">
               <Icon name="Sparkles" size={20} />
             </TabsTrigger>
-            <TabsTrigger value="schedule" className="data-[state=active]:gradient-purple-pink">
-              <Icon name="Clock" size={20} />
+            <TabsTrigger value="shop" className="data-[state=active]:gradient-purple-pink">
+              <Icon name="ShoppingBag" size={20} />
             </TabsTrigger>
             <TabsTrigger value="settings" className="data-[state=active]:gradient-purple-pink">
               <Icon name="Settings" size={20} />
@@ -257,6 +278,110 @@ const Index = () => {
                 ))}
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="map" className="space-y-4 mt-6">
+            <h2 className="text-xl font-semibold">Карта дома</h2>
+            <Card className="glassmorphism border-0 p-6">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-lg">🛋️ Гостиная</h3>
+                    <Badge variant="outline" className="gradient-purple-pink border-0">
+                      {lights.filter(l => l.room === 'Гостиная' && l.isOn).length} активных
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {lights.filter(l => l.room === 'Гостиная').map(light => (
+                      <div 
+                        key={light.id}
+                        onClick={() => toggleLight(light.id)}
+                        className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                          light.isOn ? 'gradient-purple-pink neon-glow' : 'bg-muted'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <Icon name="Lightbulb" size={16} />
+                          <span className="text-xs">{light.brightness}%</span>
+                        </div>
+                        <p className="text-xs mt-1 font-medium">{light.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-lg">🛏️ Спальня</h3>
+                    <Badge variant="outline" className="gradient-blue-orange border-0">
+                      {lights.filter(l => l.room === 'Спальня' && l.isOn).length} активных
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {lights.filter(l => l.room === 'Спальня').map(light => (
+                      <div 
+                        key={light.id}
+                        onClick={() => toggleLight(light.id)}
+                        className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                          light.isOn ? 'gradient-blue-orange neon-glow' : 'bg-muted'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <Icon name="Lightbulb" size={16} />
+                          <span className="text-xs">{light.brightness}%</span>
+                        </div>
+                        <p className="text-xs mt-1 font-medium">{light.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-lg">🍳 Кухня</h3>
+                    <Badge variant="outline" className="gradient-purple-pink border-0">
+                      {lights.filter(l => l.room === 'Кухня' && l.isOn).length} активных
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {lights.filter(l => l.room === 'Кухня').map(light => (
+                      <div 
+                        key={light.id}
+                        onClick={() => toggleLight(light.id)}
+                        className={`p-3 rounded-lg cursor-pointer transition-all duration-300 ${
+                          light.isOn ? 'gradient-purple-pink neon-glow' : 'bg-muted'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <Icon name="Lightbulb" size={16} />
+                          <span className="text-xs">{light.brightness}%</span>
+                        </div>
+                        <p className="text-xs mt-1 font-medium">{light.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="glassmorphism border-0 p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold">Быстрое управление</p>
+                  <p className="text-sm text-muted-foreground">Включить/выключить все</p>
+                </div>
+                <Button 
+                  onClick={() => {
+                    const allOn = lights.every(l => l.isOn);
+                    setLights(lights.map(l => ({ ...l, isOn: !allOn })));
+                    toast.success(allOn ? 'Все выключено' : 'Все включено');
+                  }}
+                  className="gradient-blue-orange border-0"
+                >
+                  <Icon name="Power" size={20} />
+                </Button>
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="rooms" className="space-y-4 mt-6">
@@ -355,6 +480,56 @@ const Index = () => {
                 </Card>
               ))}
             </div>
+          </TabsContent>
+
+          <TabsContent value="shop" className="space-y-4 mt-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Магазин</h2>
+              <Icon name="ShoppingCart" size={24} className="text-primary" />
+            </div>
+            <div className="space-y-3">
+              {products.map((product) => (
+                <Card key={product.id} className="glassmorphism border-0 p-4">
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">{product.image}</div>
+                    <div className="flex-1">
+                      <div className="flex items-start justify-between mb-2">
+                        <div>
+                          <h3 className="font-semibold">{product.name}</h3>
+                          <p className="text-sm text-muted-foreground">{product.description}</p>
+                        </div>
+                        <Badge variant="outline" className="gradient-purple-pink border-0">
+                          {product.type}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <p className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                          {product.price} ₽
+                        </p>
+                        <Button 
+                          size="sm" 
+                          className="gradient-blue-orange border-0"
+                          onClick={() => toast.success(`${product.name} добавлен в корзину`)}
+                        >
+                          <Icon name="Plus" size={16} className="mr-1" />
+                          В корзину
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <Card className="glassmorphism border-0 p-4 gradient-purple-pink">
+              <div className="flex items-center gap-3">
+                <Icon name="Truck" size={24} />
+                <div>
+                  <p className="font-semibold">Бесплатная доставка</p>
+                  <p className="text-sm opacity-90">При заказе от 3000 ₽</p>
+                </div>
+              </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="settings" className="space-y-4 mt-6">
