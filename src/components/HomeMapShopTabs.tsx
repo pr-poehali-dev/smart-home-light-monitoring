@@ -7,16 +7,18 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Light, Product, CartItem, EnergyData } from './types';
+import { Light, Product, CartItem } from './types';
 
 interface HomeMapShopTabsProps {
   lights: Light[];
   products: Product[];
   cart: CartItem[];
-  energyData: EnergyData[];
+  energyDataWeek: { day: string; consumption: number }[];
+  energyDataMonth: { month: string; consumption: number; cost: number }[];
   toggleLight: (id: string) => void;
   toggleRoomLights: (room: string, turnOn: boolean) => void;
   setBrightness: (id: string, value: number) => void;
+  setRoomBrightness: (room: string, value: number) => void;
   setLights: React.Dispatch<React.SetStateAction<Light[]>>;
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
@@ -27,18 +29,24 @@ const HomeMapShopTabs = ({
   lights, 
   products, 
   cart,
-  energyData,
+  energyDataWeek,
+  energyDataMonth,
   toggleLight, 
   toggleRoomLights, 
   setBrightness,
+  setRoomBrightness,
   setLights,
   addToCart,
   removeFromCart,
   updateQuantity
 }: HomeMapShopTabsProps) => {
   const [showCart, setShowCart] = useState(false);
+  const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const totalCartPrice = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const maxConsumption = Math.max(...energyData.map(d => d.consumption));
+  const currentData = viewMode === 'week' ? energyDataWeek : energyDataMonth;
+  const maxConsumption = viewMode === 'week' 
+    ? Math.max(...energyDataWeek.map(d => d.consumption))
+    : Math.max(...energyDataMonth.map(d => d.consumption));
 
   return (
     <>
@@ -46,12 +54,25 @@ const HomeMapShopTabs = ({
         <Card className="glassmorphism border-0 p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-semibold">График потребления</h2>
-            <Badge variant="outline" className="gradient-purple-pink border-0">
-              Неделя
-            </Badge>
+            <div className="flex gap-2">
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer ${viewMode === 'week' ? 'gradient-purple-pink border-0' : ''}`}
+                onClick={() => setViewMode('week')}
+              >
+                Неделя
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer ${viewMode === 'month' ? 'gradient-blue-orange border-0' : ''}`}
+                onClick={() => setViewMode('month')}
+              >
+                Месяц
+              </Badge>
+            </div>
           </div>
           <div className="flex items-end justify-between gap-2 h-40">
-            {energyData.map((data, index) => (
+            {viewMode === 'week' ? energyDataWeek.map((data) => (
               <div key={data.day} className="flex-1 flex flex-col items-center gap-2">
                 <div className="w-full flex items-end justify-center h-32">
                   <div 
@@ -65,7 +86,44 @@ const HomeMapShopTabs = ({
                 </div>
                 <p className="text-xs text-muted-foreground">{data.day}</p>
               </div>
+            )) : energyDataMonth.map((data) => (
+              <div key={data.month} className="flex-1 flex flex-col items-center gap-2">
+                <div className="w-full flex items-end justify-center h-32">
+                  <div 
+                    className="w-full gradient-purple-pink rounded-t-lg transition-all duration-500 hover:scale-105 relative group"
+                    style={{ height: `${(data.consumption / 400) * 100}%` }}
+                  >
+                    <div className="absolute -top-16 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-muted px-2 py-1 rounded text-xs whitespace-nowrap space-y-1">
+                      <p>{data.consumption} кВт⋅ч</p>
+                      <p className="text-green-500">{data.cost} ₽</p>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">{data.month}</p>
+              </div>
             ))}
+          </div>
+        </Card>
+        
+        <Card className="glassmorphism border-0 p-4">
+          <h3 className="font-semibold mb-3">Аналитика экономии</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground">Экономия за месяц</p>
+              <p className="text-xl font-bold text-green-500">-18%</p>
+            </div>
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground">Средний расход</p>
+              <p className="text-xl font-bold">13 кВт⋅ч</p>
+            </div>
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground">Пик нагрузки</p>
+              <p className="text-xl font-bold">18:00-22:00</p>
+            </div>
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-xs text-muted-foreground">Сэкономлено</p>
+              <p className="text-xl font-bold text-green-500">920 ₽</p>
+            </div>
           </div>
         </Card>
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Light, Scenario, ScheduleItem, Notification, Product, CartItem, EnergyData } from '@/components/types';
+import { Light, Scenario, ScheduleItem, Notification, Product, CartItem } from '@/components/types';
 import HeaderWithNotifications from '@/components/HeaderWithNotifications';
 import HomeMapShopTabs from '@/components/HomeMapShopTabs';
 import RoomsScenariosSettingsTabs from '@/components/RoomsScenariosSettingsTabs';
@@ -48,7 +48,7 @@ const Index = () => {
 
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  const energyData: EnergyData[] = [
+  const energyDataWeek = [
     { day: 'Пн', consumption: 12 },
     { day: 'Вт', consumption: 15 },
     { day: 'Ср', consumption: 10 },
@@ -56,6 +56,15 @@ const Index = () => {
     { day: 'Пт', consumption: 14 },
     { day: 'Сб', consumption: 8 },
     { day: 'Вс', consumption: 6 },
+  ];
+
+  const energyDataMonth = [
+    { month: 'Янв', consumption: 380, cost: 1520 },
+    { month: 'Фев', consumption: 340, cost: 1360 },
+    { month: 'Мар', consumption: 320, cost: 1280 },
+    { month: 'Апр', consumption: 290, cost: 1160 },
+    { month: 'Май', consumption: 250, cost: 1000 },
+    { month: 'Июн', consumption: 220, cost: 880 },
   ];
 
   const addToCart = (product: Product) => {
@@ -109,6 +118,13 @@ const Index = () => {
     ));
   };
 
+  const setRoomBrightness = (room: string, value: number) => {
+    setLights(lights.map(light => 
+      light.room === room ? { ...light, brightness: value } : light
+    ));
+    toast.success(`Яркость в комнате "${room}" установлена на ${value}%`);
+  };
+
   const activateScenario = (name: string) => {
     toast.success(`Сценарий "${name}" активирован`);
   };
@@ -152,10 +168,12 @@ const Index = () => {
             lights={lights}
             products={products}
             cart={cart}
-            energyData={energyData}
+            energyDataWeek={energyDataWeek}
+            energyDataMonth={energyDataMonth}
             toggleLight={toggleLight}
             toggleRoomLights={toggleRoomLights}
             setBrightness={setBrightness}
+            setRoomBrightness={setRoomBrightness}
             setLights={setLights}
             addToCart={addToCart}
             removeFromCart={removeFromCart}
@@ -169,6 +187,7 @@ const Index = () => {
             notifications={notifications}
             toggleLight={toggleLight}
             toggleRoomLights={toggleRoomLights}
+            setRoomBrightness={setRoomBrightness}
             activateScenario={activateScenario}
           />
         </Tabs>

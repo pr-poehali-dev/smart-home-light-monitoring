@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import Icon from '@/components/ui/icon';
 import { Light, Scenario, ScheduleItem, Notification } from './types';
 
@@ -14,6 +15,7 @@ interface RoomsScenariosSettingsTabsProps {
   notifications: Notification[];
   toggleLight: (id: string) => void;
   toggleRoomLights: (room: string, turnOn: boolean) => void;
+  setRoomBrightness: (room: string, value: number) => void;
   activateScenario: (name: string) => void;
 }
 
@@ -24,6 +26,7 @@ const RoomsScenariosSettingsTabs = ({
   notifications,
   toggleLight, 
   toggleRoomLights,
+  setRoomBrightness,
   activateScenario 
 }: RoomsScenariosSettingsTabsProps) => {
   const rooms = ['Все', ...Array.from(new Set(lights.map(l => l.room)))];
@@ -51,35 +54,60 @@ const RoomsScenariosSettingsTabs = ({
           ))}
         </div>
         {selectedRoom !== 'Все' && (
-          <Card className="glassmorphism border-0 p-4 mb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold">Управление комнатой</p>
-                <p className="text-sm text-muted-foreground">
-                  {filteredLights.filter(l => l.isOn).length} из {filteredLights.length} включено
-                </p>
+          <>
+            <Card className="glassmorphism border-0 p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-semibold">Управление комнатой</p>
+                  <p className="text-sm text-muted-foreground">
+                    {filteredLights.filter(l => l.isOn).length} из {filteredLights.length} включено
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="gradient-purple-pink border-0"
+                    onClick={() => toggleRoomLights(selectedRoom, true)}
+                  >
+                    <Icon name="Power" size={16} className="mr-1" />
+                    Включить все
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => toggleRoomLights(selectedRoom, false)}
+                  >
+                    <Icon name="PowerOff" size={16} className="mr-1" />
+                    Выключить все
+                  </Button>
+                </div>
               </div>
-              <div className="flex gap-2">
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  className="gradient-purple-pink border-0"
-                  onClick={() => toggleRoomLights(selectedRoom, true)}
-                >
-                  <Icon name="Power" size={16} className="mr-1" />
-                  Включить все
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => toggleRoomLights(selectedRoom, false)}
-                >
-                  <Icon name="PowerOff" size={16} className="mr-1" />
-                  Выключить все
-                </Button>
+            </Card>
+            
+            <Card className="glassmorphism border-0 p-4 mb-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="font-semibold">Яркость в комнате</p>
+                  <Badge className="gradient-blue-orange border-0">
+                    {Math.round(filteredLights.reduce((sum, l) => sum + l.brightness, 0) / filteredLights.length)}%
+                  </Badge>
+                </div>
+                <Slider 
+                  value={[Math.round(filteredLights.reduce((sum, l) => sum + l.brightness, 0) / filteredLights.length)]} 
+                  max={100} 
+                  step={10}
+                  onValueChange={([value]) => setRoomBrightness(selectedRoom, value)}
+                  className="cursor-pointer"
+                />
+                <div className="flex justify-between text-xs text-muted-foreground">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                </div>
               </div>
-            </div>
-          </Card>
+            </Card>
+          </>
         )}
         <div className="space-y-3">
           {filteredLights.map((light) => (

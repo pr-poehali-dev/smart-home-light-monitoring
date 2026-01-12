@@ -40,8 +40,3 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
-
-export interface EnergyData {
-  day: string;
-  consumption: number;
-}
