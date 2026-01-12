@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Light, Scenario, ScheduleItem, Notification, Product } from '@/components/types';
+import { Light, Scenario, ScheduleItem, Notification, Product, CartItem, EnergyData } from '@/components/types';
 import HeaderWithNotifications from '@/components/HeaderWithNotifications';
 import HomeMapShopTabs from '@/components/HomeMapShopTabs';
 import RoomsScenariosSettingsTabs from '@/components/RoomsScenariosSettingsTabs';
@@ -45,6 +45,49 @@ const Index = () => {
     { id: '5', name: 'Потолочный светильник', price: 4990, description: 'Умное управление, 24W', type: 'Светильник', image: '💫' },
     { id: '6', name: 'Диммер Wi-Fi', price: 1590, description: 'Регулировка яркости', type: 'Аксессуар', image: '⚡' },
   ];
+
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  const energyData: EnergyData[] = [
+    { day: 'Пн', consumption: 12 },
+    { day: 'Вт', consumption: 15 },
+    { day: 'Ср', consumption: 10 },
+    { day: 'Чт', consumption: 18 },
+    { day: 'Пт', consumption: 14 },
+    { day: 'Сб', consumption: 8 },
+    { day: 'Вс', consumption: 6 },
+  ];
+
+  const addToCart = (product: Product) => {
+    const existingItem = cart.find(item => item.product.id === product.id);
+    if (existingItem) {
+      setCart(cart.map(item => 
+        item.product.id === product.id 
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      ));
+    } else {
+      setCart([...cart, { product, quantity: 1 }]);
+    }
+    toast.success(`${product.name} добавлен в корзину`);
+  };
+
+  const removeFromCart = (productId: string) => {
+    setCart(cart.filter(item => item.product.id !== productId));
+    toast.success('Товар удален из корзины');
+  };
+
+  const updateQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+    } else {
+      setCart(cart.map(item => 
+        item.product.id === productId 
+          ? { ...item, quantity }
+          : item
+      ));
+    }
+  };
 
   const toggleLight = (id: string) => {
     setLights(lights.map(light => 
@@ -108,10 +151,15 @@ const Index = () => {
           <HomeMapShopTabs 
             lights={lights}
             products={products}
+            cart={cart}
+            energyData={energyData}
             toggleLight={toggleLight}
             toggleRoomLights={toggleRoomLights}
             setBrightness={setBrightness}
             setLights={setLights}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+            updateQuantity={updateQuantity}
           />
 
           <RoomsScenariosSettingsTabs 
