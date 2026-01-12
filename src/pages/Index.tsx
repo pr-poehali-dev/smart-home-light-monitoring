@@ -94,6 +94,13 @@ const Index = () => {
     toast.success('Состояние изменено');
   };
 
+  const toggleRoomLights = (room: string, turnOn: boolean) => {
+    setLights(lights.map(light => 
+      light.room === room ? { ...light, isOn: turnOn } : light
+    ));
+    toast.success(`Все светильники в комнате "${room}" ${turnOn ? 'включены' : 'выключены'}`);
+  };
+
   const setBrightness = (id: string, value: number) => {
     setLights(lights.map(light => 
       light.id === id ? { ...light, brightness: value } : light
@@ -287,9 +294,19 @@ const Index = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lg">🛋️ Гостиная</h3>
-                    <Badge variant="outline" className="gradient-purple-pink border-0">
-                      {lights.filter(l => l.room === 'Гостиная' && l.isOn).length} активных
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="gradient-purple-pink border-0">
+                        {lights.filter(l => l.room === 'Гостиная' && l.isOn).length}/{lights.filter(l => l.room === 'Гостиная').length}
+                      </Badge>
+                      <Button 
+                        size="icon" 
+                        variant="ghost"
+                        className="h-8 w-8"
+                        onClick={() => toggleRoomLights('Гостиная', !lights.filter(l => l.room === 'Гостиная').every(l => l.isOn))}
+                      >
+                        <Icon name="Power" size={16} />
+                      </Button>
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {lights.filter(l => l.room === 'Гостиная').map(light => (
@@ -313,9 +330,19 @@ const Index = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lg">🛏️ Спальня</h3>
-                    <Badge variant="outline" className="gradient-blue-orange border-0">
-                      {lights.filter(l => l.room === 'Спальня' && l.isOn).length} активных
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="gradient-blue-orange border-0">
+                        {lights.filter(l => l.room === 'Спальня' && l.isOn).length}/{lights.filter(l => l.room === 'Спальня').length}
+                      </Badge>
+                      <Button 
+                        size="icon" 
+                        variant="ghost"
+                        className="h-8 w-8"
+                        onClick={() => toggleRoomLights('Спальня', !lights.filter(l => l.room === 'Спальня').every(l => l.isOn))}
+                      >
+                        <Icon name="Power" size={16} />
+                      </Button>
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {lights.filter(l => l.room === 'Спальня').map(light => (
@@ -339,9 +366,19 @@ const Index = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-lg">🍳 Кухня</h3>
-                    <Badge variant="outline" className="gradient-purple-pink border-0">
-                      {lights.filter(l => l.room === 'Кухня' && l.isOn).length} активных
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="gradient-purple-pink border-0">
+                        {lights.filter(l => l.room === 'Кухня' && l.isOn).length}/{lights.filter(l => l.room === 'Кухня').length}
+                      </Badge>
+                      <Button 
+                        size="icon" 
+                        variant="ghost"
+                        className="h-8 w-8"
+                        onClick={() => toggleRoomLights('Кухня', !lights.filter(l => l.room === 'Кухня').every(l => l.isOn))}
+                      >
+                        <Icon name="Power" size={16} />
+                      </Button>
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {lights.filter(l => l.room === 'Кухня').map(light => (
@@ -385,7 +422,7 @@ const Index = () => {
           </TabsContent>
 
           <TabsContent value="rooms" className="space-y-4 mt-6">
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap mb-4">
               {rooms.map((room) => (
                 <Badge
                   key={room}
@@ -399,6 +436,37 @@ const Index = () => {
                 </Badge>
               ))}
             </div>
+            {selectedRoom !== 'Все' && (
+              <Card className="glassmorphism border-0 p-4 mb-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-semibold">Управление комнатой</p>
+                    <p className="text-sm text-muted-foreground">
+                      {filteredLights.filter(l => l.isOn).length} из {filteredLights.length} включено
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="gradient-purple-pink border-0"
+                      onClick={() => toggleRoomLights(selectedRoom, true)}
+                    >
+                      <Icon name="Power" size={16} className="mr-1" />
+                      Включить все
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => toggleRoomLights(selectedRoom, false)}
+                    >
+                      <Icon name="PowerOff" size={16} className="mr-1" />
+                      Выключить все
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
             <div className="space-y-3">
               {filteredLights.map((light) => (
                 <Card 
