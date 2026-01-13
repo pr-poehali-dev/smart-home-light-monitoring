@@ -51,9 +51,9 @@ const HomeMapShopTabs = ({
   return (
     <>
       <TabsContent value="home" className="space-y-4 mt-6">
-        <Card className="glassmorphism border-0 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">График потребления</h2>
+        <Card className="glassmorphism border-0 p-4 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-3">
+            <h2 className="text-xl md:text-2xl font-semibold">График потребления</h2>
             <div className="flex gap-2">
               <Badge 
                 variant="outline" 
@@ -71,7 +71,7 @@ const HomeMapShopTabs = ({
               </Badge>
             </div>
           </div>
-          <div className="flex items-end justify-between gap-2 h-40">
+          <div className="flex items-end justify-between gap-2 h-40 md:h-64">
             {viewMode === 'week' ? energyDataWeek.map((data) => (
               <div key={data.day} className="flex-1 flex flex-col items-center gap-2">
                 <div className="w-full flex items-end justify-center h-32">
@@ -105,9 +105,9 @@ const HomeMapShopTabs = ({
           </div>
         </Card>
         
-        <Card className="glassmorphism border-0 p-4">
-          <h3 className="font-semibold mb-3">Аналитика экономии</h3>
-          <div className="grid grid-cols-2 gap-3">
+        <Card className="glassmorphism border-0 p-4 md:p-6">
+          <h3 className="font-semibold text-lg md:text-xl mb-3">Аналитика экономии</h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="bg-muted/30 p-3 rounded-lg">
               <p className="text-xs text-muted-foreground">Экономия за месяц</p>
               <p className="text-xl font-bold text-green-500">-18%</p>
@@ -129,7 +129,7 @@ const HomeMapShopTabs = ({
 
         <div>
           <h2 className="text-xl font-semibold mb-3">Все светильники</h2>
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {lights.map((light) => (
               <Card 
                 key={light.id} 
@@ -181,10 +181,10 @@ const HomeMapShopTabs = ({
       </TabsContent>
 
       <TabsContent value="map" className="space-y-4 mt-6">
-        <h2 className="text-xl font-semibold">Карта дома</h2>
+        <h2 className="text-xl md:text-2xl font-semibold">Карта дома</h2>
         
-        <Card className="glassmorphism border-0 p-4">
-          <div className="relative aspect-[4/3] bg-muted/30 rounded-lg p-4">
+        <Card className="glassmorphism border-0 p-4 md:p-6">
+          <div className="relative aspect-[4/3] bg-muted/30 rounded-lg p-2 md:p-4">
             <svg viewBox="0 0 400 300" className="w-full h-full">
               <rect x="10" y="80" width="120" height="100" fill="rgba(139, 92, 246, 0.1)" stroke="rgba(139, 92, 246, 0.3)" strokeWidth="2" rx="4" />
               <text x="70" y="50" textAnchor="middle" fill="currentColor" fontSize="14" fontWeight="600">🛌️ Гостиная</text>
@@ -251,11 +251,11 @@ const HomeMapShopTabs = ({
           </div>
         </Card>
         
-        <Card className="glassmorphism border-0 p-6">
+        <Card className="glassmorphism border-0 p-4 md:p-6">
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-lg">🛋️ Гостиная</h3>
+                <h3 className="font-semibold text-lg md:text-xl">🛋️ Гостиная</h3>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="gradient-purple-pink border-0">
                     {lights.filter(l => l.room === 'Гостиная' && l.isOn).length}/{lights.filter(l => l.room === 'Гостиная').length}
@@ -270,7 +270,7 @@ const HomeMapShopTabs = ({
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {lights.filter(l => l.room === 'Гостиная').map(light => (
                   <div 
                     key={light.id}
@@ -291,7 +291,7 @@ const HomeMapShopTabs = ({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-lg">🛏️ Спальня</h3>
+                <h3 className="font-semibold text-lg md:text-xl">🛏️ Спальня</h3>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="gradient-blue-orange border-0">
                     {lights.filter(l => l.room === 'Спальня' && l.isOn).length}/{lights.filter(l => l.room === 'Спальня').length}
@@ -306,7 +306,7 @@ const HomeMapShopTabs = ({
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {lights.filter(l => l.room === 'Спальня').map(light => (
                   <div 
                     key={light.id}
@@ -327,7 +327,7 @@ const HomeMapShopTabs = ({
 
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-lg">🍳 Кухня</h3>
+                <h3 className="font-semibold text-lg md:text-xl">🍳 Кухня</h3>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="gradient-purple-pink border-0">
                     {lights.filter(l => l.room === 'Кухня' && l.isOn).length}/{lights.filter(l => l.room === 'Кухня').length}
@@ -342,7 +342,7 @@ const HomeMapShopTabs = ({
                   </Button>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {lights.filter(l => l.room === 'Кухня').map(light => (
                   <div 
                     key={light.id}
@@ -388,38 +388,36 @@ const HomeMapShopTabs = ({
           <h2 className="text-xl font-semibold">Магазин</h2>
           <Icon name="ShoppingCart" size={24} className="text-primary" />
         </div>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {products.map((product) => (
-            <Card key={product.id} className="glassmorphism border-0 p-4">
-              <div className="flex items-start gap-4">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="w-20 h-20 object-cover rounded-lg"
-                />
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="font-semibold">{product.name}</h3>
-                      <p className="text-sm text-muted-foreground">{product.description}</p>
-                    </div>
-                    <Badge variant="outline" className="gradient-purple-pink border-0">
-                      {product.type}
-                    </Badge>
+            <Card key={product.id} className="glassmorphism border-0 p-4 flex flex-col">
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="w-full h-48 object-cover rounded-lg mb-4"
+              />
+              <div className="flex-1 flex flex-col">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex-1">
+                    <h3 className="font-semibold">{product.name}</h3>
+                    <p className="text-sm text-muted-foreground">{product.description}</p>
                   </div>
-                  <div className="flex items-center justify-between mt-3">
-                    <p className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                      {product.price} ₽
-                    </p>
-                    <Button 
-                      size="sm" 
-                      className="gradient-blue-orange border-0"
-                      onClick={() => addToCart(product)}
-                    >
-                      <Icon name="Plus" size={16} className="mr-1" />
-                      В корзину
-                    </Button>
-                  </div>
+                  <Badge variant="outline" className="gradient-purple-pink border-0 ml-2">
+                    {product.type}
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between mt-auto pt-3">
+                  <p className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    {product.price} ₽
+                  </p>
+                  <Button 
+                    size="sm" 
+                    className="gradient-blue-orange border-0"
+                    onClick={() => addToCart(product)}
+                  >
+                    <Icon name="Plus" size={16} className="mr-1" />
+                    В корзину
+                  </Button>
                 </div>
               </div>
             </Card>

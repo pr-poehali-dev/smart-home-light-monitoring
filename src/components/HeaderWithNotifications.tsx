@@ -93,15 +93,23 @@ const HeaderWithNotifications = ({
         </div>
       </div>
 
-      <Card className="glassmorphism p-4 border-0">
-        <div className="grid grid-cols-2 gap-4">
+      <Card className="glassmorphism p-4 md:p-6 border-0">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Активно</p>
-            <p className="text-2xl font-bold">{activeCount} из {totalLights}</p>
+            <p className="text-2xl md:text-3xl font-bold">{activeCount} из {totalLights}</p>
           </div>
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">Мощность</p>
-            <p className="text-2xl font-bold">{Math.round(totalPower / 10)}%</p>
+            <p className="text-2xl md:text-3xl font-bold">{Math.round(totalPower / 10)}%</p>
+          </div>
+          <div className="space-y-1 hidden md:block">
+            <p className="text-sm text-muted-foreground">Сегодня</p>
+            <p className="text-2xl md:text-3xl font-bold">12 кВт⋅ч</p>
+          </div>
+          <div className="space-y-1 hidden md:block">
+            <p className="text-sm text-muted-foreground">Экономия</p>
+            <p className="text-2xl md:text-3xl font-bold text-green-500">-18%</p>
           </div>
         </div>
       </Card>

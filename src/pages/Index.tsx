@@ -133,8 +133,8 @@ const Index = () => {
   const totalPower = lights.filter(l => l.isOn).reduce((sum, l) => sum + l.brightness, 0);
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
-      <div className="max-w-md mx-auto px-4 py-6 space-y-6">
+    <div className="min-h-screen bg-background text-foreground pb-20 md:pb-6">
+      <div className="max-w-md md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-6 space-y-6">
         <HeaderWithNotifications 
           notifications={notifications}
           activeCount={activeCount}
@@ -143,24 +143,30 @@ const Index = () => {
         />
 
         <Tabs defaultValue="home" className="animate-scale-in">
-          <TabsList className="grid w-full grid-cols-6 bg-muted/50">
-            <TabsTrigger value="home" className="data-[state=active]:gradient-purple-pink">
+          <TabsList className="grid w-full grid-cols-6 bg-muted/50 md:gap-2">
+            <TabsTrigger value="home" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="Home" size={20} />
+              <span className="hidden md:inline">Главная</span>
             </TabsTrigger>
-            <TabsTrigger value="map" className="data-[state=active]:gradient-purple-pink">
+            <TabsTrigger value="map" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="Map" size={20} />
+              <span className="hidden md:inline">Карта</span>
             </TabsTrigger>
-            <TabsTrigger value="rooms" className="data-[state=active]:gradient-purple-pink">
+            <TabsTrigger value="rooms" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="Lightbulb" size={20} />
+              <span className="hidden md:inline">Комнаты</span>
             </TabsTrigger>
-            <TabsTrigger value="scenarios" className="data-[state=active]:gradient-purple-pink">
+            <TabsTrigger value="scenarios" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="Sparkles" size={20} />
+              <span className="hidden md:inline">Сценарии</span>
             </TabsTrigger>
-            <TabsTrigger value="shop" className="data-[state=active]:gradient-purple-pink">
+            <TabsTrigger value="shop" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="ShoppingBag" size={20} />
+              <span className="hidden md:inline">Магазин</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="data-[state=active]:gradient-purple-pink">
+            <TabsTrigger value="settings" className="data-[state=active]:gradient-purple-pink flex items-center gap-2">
               <Icon name="Settings" size={20} />
+              <span className="hidden md:inline">Настройки</span>
             </TabsTrigger>
           </TabsList>
 

@@ -109,7 +109,7 @@ const RoomsScenariosSettingsTabs = ({
             </Card>
           </>
         )}
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filteredLights.map((light) => (
             <Card 
               key={light.id} 
@@ -146,7 +146,7 @@ const RoomsScenariosSettingsTabs = ({
 
       <TabsContent value="scenarios" className="space-y-4 mt-6">
         <h2 className="text-xl font-semibold">Сценарии освещения</h2>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {scenarios.map((scenario) => (
             <Card
               key={scenario.id}
