@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Light, Scenario, ScheduleItem, Notification, Product, CartItem } from '@/components/types';
+import { Light, Scenario, ScheduleItem, Notification, Product, CartItem, Room } from '@/components/types';
 import HeaderWithNotifications from '@/components/HeaderWithNotifications';
 import HomeMapShopTabs from '@/components/HomeMapShopTabs';
 import RoomsScenariosSettingsTabs from '@/components/RoomsScenariosSettingsTabs';
+import RoomManager from '@/components/RoomManager';
+import InteractiveMap from '@/components/InteractiveMap';
 
 const Index = () => {
   const [lights, setLights] = useState<Light[]>([
@@ -47,6 +49,12 @@ const Index = () => {
   ];
 
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([
+    { id: '1', name: 'Гостиная', icon: 'Sofa', color: 'rgba(139, 92, 246, 0.2)', x: 10, y: 80, width: 120, height: 100 },
+    { id: '2', name: 'Спальня', icon: 'Bed', color: 'rgba(14, 165, 233, 0.2)', x: 150, y: 80, width: 120, height: 100 },
+    { id: '3', name: 'Кухня', icon: 'Utensils', color: 'rgba(249, 115, 22, 0.2)', x: 290, y: 80, width: 100, height: 100 },
+  ]);
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
 
   const energyDataWeek = [
     { day: 'Пн', consumption: 12 },
@@ -184,6 +192,10 @@ const Index = () => {
             addToCart={addToCart}
             removeFromCart={removeFromCart}
             updateQuantity={updateQuantity}
+            rooms={rooms}
+            setRooms={setRooms}
+            selectedRoom={selectedRoom}
+            onRoomClick={setSelectedRoom}
           />
 
           <RoomsScenariosSettingsTabs 

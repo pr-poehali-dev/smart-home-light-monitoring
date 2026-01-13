@@ -4,6 +4,8 @@ export interface Light {
   room: string;
   isOn: boolean;
   brightness: number;
+  x?: number;
+  y?: number;
 }
 
 export interface Scenario {
@@ -39,4 +41,15 @@ export interface Product {
 export interface CartItem {
   product: Product;
   quantity: number;
+}
+
+export interface Room {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }

@@ -7,7 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
-import { Light, Product, CartItem } from './types';
+import { Light, Product, CartItem, Room } from './types';
+import RoomManager from './RoomManager';
+import InteractiveMap from './InteractiveMap';
 
 interface HomeMapShopTabsProps {
   lights: Light[];
@@ -23,6 +25,10 @@ interface HomeMapShopTabsProps {
   addToCart: (product: Product) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
+  rooms: Room[];
+  setRooms: React.Dispatch<React.SetStateAction<Room[]>>;
+  selectedRoom: string | null;
+  onRoomClick: (roomId: string) => void;
 }
 
 const HomeMapShopTabs = ({ 
@@ -38,7 +44,11 @@ const HomeMapShopTabs = ({
   setLights,
   addToCart,
   removeFromCart,
-  updateQuantity
+  updateQuantity,
+  rooms,
+  setRooms,
+  selectedRoom,
+  onRoomClick
 }: HomeMapShopTabsProps) => {
   const [showCart, setShowCart] = useState(false);
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
@@ -181,6 +191,27 @@ const HomeMapShopTabs = ({
       </TabsContent>
 
       <TabsContent value="map" className="space-y-4 mt-6">
+        <RoomManager
+          rooms={rooms}
+          lights={lights}
+          setRooms={setRooms}
+          setLights={setLights}
+          onRoomClick={onRoomClick}
+          selectedRoom={selectedRoom}
+        />
+        
+        <InteractiveMap
+          rooms={rooms}
+          lights={lights}
+          toggleLight={toggleLight}
+          toggleRoomLights={toggleRoomLights}
+          setLights={setLights}
+          selectedRoom={selectedRoom}
+          onRoomClick={onRoomClick}
+        />
+      </TabsContent>
+
+      <TabsContent value="map-old" className="space-y-4 mt-6 hidden">
         <h2 className="text-xl md:text-2xl font-semibold">Карта дома</h2>
         
         <Card className="glassmorphism border-0 p-4 md:p-6">
