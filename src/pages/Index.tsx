@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
@@ -8,16 +8,30 @@ import HomeMapShopTabs from '@/components/HomeMapShopTabs';
 import RoomsScenariosSettingsTabs from '@/components/RoomsScenariosSettingsTabs';
 import RoomManager from '@/components/RoomManager';
 import InteractiveMap from '@/components/InteractiveMap';
+import { useDemoSync } from '@/hooks/useDemoSync';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 const Index = () => {
-  const [lights, setLights] = useState<Light[]>([
-    { id: '1', name: 'Люстра', room: 'Гостиная', isOn: true, brightness: 80 },
-    { id: '2', name: 'Торшер', room: 'Гостиная', isOn: false, brightness: 60 },
-    { id: '3', name: 'Потолок', room: 'Спальня', isOn: true, brightness: 50 },
-    { id: '4', name: 'Лента RGB', room: 'Спальня', isOn: true, brightness: 90 },
-    { id: '5', name: 'Основной', room: 'Кухня', isOn: false, brightness: 70 },
-    { id: '6', name: 'Рабочая зона', room: 'Кухня', isOn: true, brightness: 100 },
-  ]);
+  const [lights, setLights] = useState<Light[]>(loadLightsFromStorage);
+  const [demoMode, setDemoMode] = useState(false);
+  const { broadcast } = useDemoSync(lights, setLights, demoMode);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartHomeRooms', JSON.stringify(rooms));
+    } catch (e) {
+      console.error('Failed to save rooms:', e);
+    }
+  }, [rooms]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartHomeLights', JSON.stringify(lights));
+    } catch (e) {
+      console.error('Failed to save lights:', e);
+    }
+  }, [lights]);
 
   const scenarios: Scenario[] = [
     { id: '1', name: 'Вечер', icon: 'Sunset', gradient: 'gradient-purple-pink' },
@@ -49,11 +63,43 @@ const Index = () => {
   ];
 
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [rooms, setRooms] = useState<Room[]>([
-    { id: '1', name: 'Гостиная', icon: 'Sofa', color: 'rgba(139, 92, 246, 0.2)', x: 10, y: 80, width: 120, height: 100 },
-    { id: '2', name: 'Спальня', icon: 'Bed', color: 'rgba(14, 165, 233, 0.2)', x: 150, y: 80, width: 120, height: 100 },
-    { id: '3', name: 'Кухня', icon: 'Utensils', color: 'rgba(249, 115, 22, 0.2)', x: 290, y: 80, width: 100, height: 100 },
-  ]);
+  
+  const loadRoomsFromStorage = (): Room[] => {
+    try {
+      const saved = localStorage.getItem('smartHomeRooms');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error('Failed to load rooms from storage:', e);
+    }
+    return [
+      { id: '1', name: 'Гостиная', icon: 'Sofa', color: 'rgba(139, 92, 246, 0.2)', x: 10, y: 80, width: 120, height: 100 },
+      { id: '2', name: 'Спальня', icon: 'Bed', color: 'rgba(14, 165, 233, 0.2)', x: 150, y: 80, width: 120, height: 100 },
+      { id: '3', name: 'Кухня', icon: 'Utensils', color: 'rgba(249, 115, 22, 0.2)', x: 290, y: 80, width: 100, height: 100 },
+    ];
+  };
+
+  const loadLightsFromStorage = (): Light[] => {
+    try {
+      const saved = localStorage.getItem('smartHomeLights');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error('Failed to load lights from storage:', e);
+    }
+    return [
+      { id: '1', name: 'Люстра', room: 'Гостиная', isOn: true, brightness: 80 },
+      { id: '2', name: 'Торшер', room: 'Гостиная', isOn: false, brightness: 60 },
+      { id: '3', name: 'Потолок', room: 'Спальня', isOn: true, brightness: 50 },
+      { id: '4', name: 'Лента RGB', room: 'Спальня', isOn: true, brightness: 90 },
+      { id: '5', name: 'Основной', room: 'Кухня', isOn: false, brightness: 70 },
+      { id: '6', name: 'Рабочая зона', room: 'Кухня', isOn: true, brightness: 100 },
+    ];
+  };
+
+  const [rooms, setRooms] = useState<Room[]>(loadRoomsFromStorage);
   const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
 
   const energyDataWeek = [
@@ -107,16 +153,22 @@ const Index = () => {
   };
 
   const toggleLight = (id: string) => {
-    setLights(lights.map(light => 
-      light.id === id ? { ...light, isOn: !light.isOn } : light
-    ));
-    toast.success('Состояние изменено');
+    const light = lights.find(l => l.id === id);
+    if (light) {
+      const newState = !light.isOn;
+      setLights(lights.map(l => 
+        l.id === id ? { ...l, isOn: newState } : l
+      ));
+      broadcast({ type: 'toggle', lightId: id, value: newState });
+      toast.success('Состояние изменено');
+    }
   };
 
   const toggleRoomLights = (room: string, turnOn: boolean) => {
     setLights(lights.map(light => 
       light.room === room ? { ...light, isOn: turnOn } : light
     ));
+    broadcast({ type: 'room_toggle', roomName: room, value: turnOn });
     toast.success(`Все светильники в комнате "${room}" ${turnOn ? 'включены' : 'выключены'}`);
   };
 
@@ -124,12 +176,14 @@ const Index = () => {
     setLights(lights.map(light => 
       light.id === id ? { ...light, brightness: value } : light
     ));
+    broadcast({ type: 'brightness', lightId: id, value });
   };
 
   const setRoomBrightness = (room: string, value: number) => {
     setLights(lights.map(light => 
       light.room === room ? { ...light, brightness: value } : light
     ));
+    broadcast({ type: 'room_brightness', roomName: room, value });
     toast.success(`Яркость в комнате "${room}" установлена на ${value}%`);
   };
 
@@ -149,6 +203,20 @@ const Index = () => {
           totalLights={lights.length}
           totalPower={totalPower}
         />
+
+        <div className="glassmorphism border-0 p-3 rounded-xl flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Icon name="MonitorPlay" size={18} className="text-purple-500" />
+            <Label htmlFor="demo-mode" className="text-sm font-medium cursor-pointer">
+              Режим демонстрации
+            </Label>
+          </div>
+          <Switch 
+            id="demo-mode"
+            checked={demoMode} 
+            onCheckedChange={setDemoMode}
+          />
+        </div>
 
         <Tabs defaultValue="home" className="animate-scale-in">
           <TabsList className="grid w-full grid-cols-6 bg-muted/50 md:gap-2">
