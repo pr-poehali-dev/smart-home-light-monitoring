@@ -13,6 +13,15 @@ export interface Scenario {
   name: string;
   icon: string;
   gradient: string;
+  lights: {
+    [room: string]: {
+      isOn: boolean;
+      brightness: number;
+    };
+  };
+  roomColors?: {
+    [room: string]: string;
+  };
 }
 
 export interface ScheduleItem {

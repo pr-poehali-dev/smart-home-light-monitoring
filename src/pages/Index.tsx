@@ -71,10 +71,70 @@ const Index = () => {
   }, [lights]);
 
   const scenarios: Scenario[] = [
-    { id: '1', name: 'Вечер', icon: 'Sunset', gradient: 'gradient-purple-pink' },
-    { id: '2', name: 'Работа', icon: 'Laptop', gradient: 'gradient-blue-orange' },
-    { id: '3', name: 'Релакс', icon: 'CloudMoon', gradient: 'gradient-purple-pink' },
-    { id: '4', name: 'Вечеринка', icon: 'Music', gradient: 'gradient-blue-orange' },
+    { 
+      id: '1', 
+      name: 'Вечер', 
+      icon: 'Sunset', 
+      gradient: 'gradient-purple-pink',
+      lights: {
+        'Гостиная': { isOn: true, brightness: 40 },
+        'Спальня': { isOn: true, brightness: 30 },
+        'Кухня': { isOn: false, brightness: 0 }
+      },
+      roomColors: {
+        'Гостиная': 'rgba(251, 146, 60, 0.25)',
+        'Спальня': 'rgba(249, 115, 22, 0.2)',
+        'Кухня': 'rgba(120, 113, 108, 0.15)'
+      }
+    },
+    { 
+      id: '2', 
+      name: 'Работа', 
+      icon: 'Laptop', 
+      gradient: 'gradient-blue-orange',
+      lights: {
+        'Гостиная': { isOn: true, brightness: 100 },
+        'Спальня': { isOn: false, brightness: 0 },
+        'Кухня': { isOn: true, brightness: 100 }
+      },
+      roomColors: {
+        'Гостиная': 'rgba(59, 130, 246, 0.25)',
+        'Спальня': 'rgba(120, 113, 108, 0.15)',
+        'Кухня': 'rgba(14, 165, 233, 0.25)'
+      }
+    },
+    { 
+      id: '3', 
+      name: 'Релакс', 
+      icon: 'CloudMoon', 
+      gradient: 'gradient-purple-pink',
+      lights: {
+        'Гостиная': { isOn: false, brightness: 0 },
+        'Спальня': { isOn: true, brightness: 20 },
+        'Кухня': { isOn: false, brightness: 0 }
+      },
+      roomColors: {
+        'Гостиная': 'rgba(120, 113, 108, 0.15)',
+        'Спальня': 'rgba(139, 92, 246, 0.2)',
+        'Кухня': 'rgba(120, 113, 108, 0.15)'
+      }
+    },
+    { 
+      id: '4', 
+      name: 'Вечеринка', 
+      icon: 'Music', 
+      gradient: 'gradient-blue-orange',
+      lights: {
+        'Гостиная': { isOn: true, brightness: 100 },
+        'Спальня': { isOn: true, brightness: 100 },
+        'Кухня': { isOn: true, brightness: 80 }
+      },
+      roomColors: {
+        'Гостиная': 'rgba(236, 72, 153, 0.25)',
+        'Спальня': 'rgba(168, 85, 247, 0.25)',
+        'Кухня': 'rgba(14, 165, 233, 0.25)'
+      }
+    },
   ];
 
   const schedule: ScheduleItem[] = [
@@ -187,6 +247,32 @@ const Index = () => {
   };
 
   const activateScenario = (name: string) => {
+    const scenario = scenarios.find(s => s.name === name);
+    if (!scenario) return;
+
+    setLights(prevLights => 
+      prevLights.map(light => {
+        const roomSettings = scenario.lights[light.room];
+        if (roomSettings) {
+          return {
+            ...light,
+            isOn: roomSettings.isOn,
+            brightness: roomSettings.brightness
+          };
+        }
+        return light;
+      })
+    );
+
+    if (scenario.roomColors) {
+      setRooms(prevRooms =>
+        prevRooms.map(room => ({
+          ...room,
+          color: scenario.roomColors?.[room.name] || room.color
+        }))
+      );
+    }
+
     toast.success(`Сценарий "${name}" активирован`);
   };
 
