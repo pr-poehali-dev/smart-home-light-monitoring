@@ -12,8 +12,45 @@ import { useDemoSync } from '@/hooks/useDemoSync';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 
+const loadRoomsFromStorage = (): Room[] => {
+  try {
+    const saved = localStorage.getItem('smartHomeRooms');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error('Failed to load rooms from storage:', e);
+  }
+  return [
+    { id: '1', name: 'Гостиная', icon: 'Sofa', color: 'rgba(139, 92, 246, 0.2)', x: 10, y: 80, width: 120, height: 100 },
+    { id: '2', name: 'Спальня', icon: 'Bed', color: 'rgba(14, 165, 233, 0.2)', x: 150, y: 80, width: 120, height: 100 },
+    { id: '3', name: 'Кухня', icon: 'Utensils', color: 'rgba(249, 115, 22, 0.2)', x: 290, y: 80, width: 100, height: 100 },
+  ];
+};
+
+const loadLightsFromStorage = (): Light[] => {
+  try {
+    const saved = localStorage.getItem('smartHomeLights');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error('Failed to load lights from storage:', e);
+  }
+  return [
+    { id: '1', name: 'Люстра', room: 'Гостиная', isOn: true, brightness: 80 },
+    { id: '2', name: 'Торшер', room: 'Гостиная', isOn: false, brightness: 60 },
+    { id: '3', name: 'Потолок', room: 'Спальня', isOn: true, brightness: 50 },
+    { id: '4', name: 'Лента RGB', room: 'Спальня', isOn: true, brightness: 90 },
+    { id: '5', name: 'Основной', room: 'Кухня', isOn: false, brightness: 70 },
+    { id: '6', name: 'Рабочая зона', room: 'Кухня', isOn: true, brightness: 100 },
+  ];
+};
+
 const Index = () => {
   const [lights, setLights] = useState<Light[]>(loadLightsFromStorage);
+  const [rooms, setRooms] = useState<Room[]>(loadRoomsFromStorage);
+  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
   const [demoMode, setDemoMode] = useState(false);
   const { broadcast } = useDemoSync(lights, setLights, demoMode);
 
@@ -63,44 +100,6 @@ const Index = () => {
   ];
 
   const [cart, setCart] = useState<CartItem[]>([]);
-  
-  const loadRoomsFromStorage = (): Room[] => {
-    try {
-      const saved = localStorage.getItem('smartHomeRooms');
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error('Failed to load rooms from storage:', e);
-    }
-    return [
-      { id: '1', name: 'Гостиная', icon: 'Sofa', color: 'rgba(139, 92, 246, 0.2)', x: 10, y: 80, width: 120, height: 100 },
-      { id: '2', name: 'Спальня', icon: 'Bed', color: 'rgba(14, 165, 233, 0.2)', x: 150, y: 80, width: 120, height: 100 },
-      { id: '3', name: 'Кухня', icon: 'Utensils', color: 'rgba(249, 115, 22, 0.2)', x: 290, y: 80, width: 100, height: 100 },
-    ];
-  };
-
-  const loadLightsFromStorage = (): Light[] => {
-    try {
-      const saved = localStorage.getItem('smartHomeLights');
-      if (saved) {
-        return JSON.parse(saved);
-      }
-    } catch (e) {
-      console.error('Failed to load lights from storage:', e);
-    }
-    return [
-      { id: '1', name: 'Люстра', room: 'Гостиная', isOn: true, brightness: 80 },
-      { id: '2', name: 'Торшер', room: 'Гостиная', isOn: false, brightness: 60 },
-      { id: '3', name: 'Потолок', room: 'Спальня', isOn: true, brightness: 50 },
-      { id: '4', name: 'Лента RGB', room: 'Спальня', isOn: true, brightness: 90 },
-      { id: '5', name: 'Основной', room: 'Кухня', isOn: false, brightness: 70 },
-      { id: '6', name: 'Рабочая зона', room: 'Кухня', isOn: true, brightness: 100 },
-    ];
-  };
-
-  const [rooms, setRooms] = useState<Room[]>(loadRoomsFromStorage);
-  const [selectedRoom, setSelectedRoom] = useState<string | null>(null);
 
   const energyDataWeek = [
     { day: 'Пн', consumption: 12 },
