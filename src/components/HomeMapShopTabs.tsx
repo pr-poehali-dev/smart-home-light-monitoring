@@ -392,7 +392,11 @@ const HomeMapShopTabs = ({
           {products.map((product) => (
             <Card key={product.id} className="glassmorphism border-0 p-4">
               <div className="flex items-start gap-4">
-                <div className="text-4xl">{product.image}</div>
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  className="w-20 h-20 object-cover rounded-lg"
+                />
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-2">
                     <div>
@@ -432,7 +436,11 @@ const HomeMapShopTabs = ({
               {cart.map((item) => (
                 <div key={item.product.id} className="flex items-center justify-between bg-muted/30 p-3 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <span className="text-2xl">{item.product.image}</span>
+                    <img 
+                      src={item.product.image} 
+                      alt={item.product.name}
+                      className="w-12 h-12 object-cover rounded-lg"
+                    />
                     <div>
                       <p className="font-medium text-sm">{item.product.name}</p>
                       <p className="text-xs text-muted-foreground">{item.product.price} ₽</p>

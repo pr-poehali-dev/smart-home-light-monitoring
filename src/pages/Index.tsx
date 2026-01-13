@@ -38,12 +38,12 @@ const Index = () => {
   ]);
 
   const products: Product[] = [
-    { id: '1', name: 'Умная лампочка E27', price: 1290, description: 'RGB, 9W, Wi-Fi', type: 'Лампа', image: '💡' },
-    { id: '2', name: 'LED лента 5м', price: 2490, description: 'RGB, пульт ДУ', type: 'Лента', image: '🌈' },
-    { id: '3', name: 'Умный выключатель', price: 1890, description: 'Сенсорный, 2 клавиши', type: 'Выключатель', image: '🎛️' },
-    { id: '4', name: 'Настольная лампа', price: 3490, description: 'RGB, таймер сна', type: 'Лампа', image: '🪔' },
-    { id: '5', name: 'Потолочный светильник', price: 4990, description: 'Умное управление, 24W', type: 'Светильник', image: '💫' },
-    { id: '6', name: 'Диммер Wi-Fi', price: 1590, description: 'Регулировка яркости', type: 'Аксессуар', image: '⚡' },
+    { id: '1', name: 'Умная лампочка E27', price: 1290, description: 'RGB, 9W, Wi-Fi', type: 'Лампа', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/94b60f2e-9aa6-4ca0-8748-81239c56648e.jpg' },
+    { id: '2', name: 'LED лента 5м', price: 2490, description: 'RGB, пульт ДУ', type: 'Лента', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/eaa1a162-83ae-4087-a049-a1e5888d24bc.jpg' },
+    { id: '3', name: 'Умный выключатель', price: 1890, description: 'Сенсорный, 2 клавиши', type: 'Выключатель', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/7decadd3-0e75-4da1-8ebf-cf2ceb73a153.jpg' },
+    { id: '4', name: 'Настольная лампа', price: 3490, description: 'RGB, таймер сна', type: 'Лампа', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/06d2395a-ca8a-4e52-953d-5a380ce05387.jpg' },
+    { id: '5', name: 'Потолочный светильник', price: 4990, description: 'Умное управление, 24W', type: 'Светильник', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/b8b07c0a-9b77-4f83-9bdc-b6304c3a7901.jpg' },
+    { id: '6', name: 'Диммер Wi-Fi', price: 1590, description: 'Регулировка яркости', type: 'Аксессуар', image: 'https://cdn.poehali.dev/projects/79c4a0c8-7dc9-4f99-9fdd-ad9c768b7df0/files/b37e5a8b-4490-4a9e-81d7-c039ec4c4c38.jpg' },
   ];
 
   const [cart, setCart] = useState<CartItem[]>([]);
